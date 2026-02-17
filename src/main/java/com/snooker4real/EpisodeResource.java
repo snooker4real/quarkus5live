@@ -1,5 +1,6 @@
 package com.snooker4real;
 
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -11,6 +12,9 @@ import java.util.List;
 @Path("/episodes")
 public class EpisodeResource {
 
+    @Inject
+    private EpisodeRepository repository;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Episode> episodes() {
@@ -18,11 +22,20 @@ public class EpisodeResource {
     }
 
     @GET
+    @Path("/caps")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<String> caps() {
+        return Episode.<Episode>listAll().stream()
+                .map(episode ->episode.title.toUpperCase())
+                .toList();
+    }
+
+    @GET
     @Path("/{episode}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Episode> episodes(@PathParam("episode") String episode) {
         if (episode != null) {
-            return Episode.findByEpisode(episode);
+            return repository.findByEpisode(episode);
         }
         return Episode.listAll();
     }

@@ -11,8 +11,4 @@ public class Episode extends PanacheEntity {
     public String title;
     public String description;
 
-    public static List<Episode> findByEpisode(String episode) {
-        return Episode.find("title", episode).list();
-    }
-
 }
